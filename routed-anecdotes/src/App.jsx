@@ -34,11 +34,24 @@ const AnecdoteList = ({ anecdotes }) => (
     <h2>Anecdotes</h2>
     <ul>
       {anecdotes.map((anecdote) => (
-        <li key={anecdote.id}>{anecdote.content}</li>
+        <li key={anecdote.id}>
+          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>
       ))}
     </ul>
   </div>
 )
+
+const AnecdoteDetail = ({ anecdote }) =>
+  anecdote && (
+    <div>
+      <h2>{anecdote.content}</h2>
+      <div>has {anecdote.votes} votes</div>
+      <div>
+        for more info see <a href='{anecdote.info}'>{anecdote.info}</a>
+      </div>
+    </div>
+  )
 
 const About = () => (
   <div>
@@ -147,7 +160,11 @@ const App = () => {
     setAnecdotes(anecdotes.concat(anecdote))
   }
 
-  const anecdoteById = (id) => anecdotes.find((a) => a.id === id)
+  const anecdoteById = (id) => anecdotes.find((a) => a.id === Number(id))
+
+  const match = useMatch('/anecdotes/:id')
+  const anecdoteFilter = match ? anecdoteById(match.params.id) : null
+  console.log('anecdoteFilter', anecdoteFilter)
 
   const vote = (id) => {
     const anecdote = anecdoteById(id)
@@ -160,19 +177,23 @@ const App = () => {
     setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)))
   }
 
+  console.log(anecdoteFilter)
+
   return (
     <div>
-      <Router>
-        <h1>Software anecdotes</h1>
-        <Menu />
-        <Routes>
-          <Route path='/about' element={<About />} />
-          <Route path='/create' element={<CreateNew addNew={addNew} />} />
-          <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
-        </Routes>
+      <h1>Software anecdotes</h1>
+      <Menu />
+      <Routes>
+        <Route
+          path='/anecdotes/:id'
+          element={<AnecdoteDetail anecdote={anecdoteFilter} />}
+        />
+        <Route path='/about' element={<About />} />
+        <Route path='/create' element={<CreateNew addNew={addNew} />} />
+        <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
+      </Routes>
 
-        <Footer />
-      </Router>
+      <Footer />
     </div>
   )
 }
