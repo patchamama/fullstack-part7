@@ -98,11 +98,18 @@ const CreateNew = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0,
     })
+  }
+
+  const resetValues = (e) => {
+    e.preventDefault()
+    content.resetValue()
+    author.resetValue()
+    info.resetValue()
   }
 
   return (
@@ -111,17 +118,33 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input {...content} />
+          <input
+            value={content.value}
+            onChange={content.onChange}
+            type={content.type}
+            // {...content}
+          />
         </div>
         <div>
           author
-          <input {...author} />
+          <input
+            value={author.value}
+            onChange={author.onChange}
+            type={author.type}
+            // {...author}
+          />
         </div>
         <div>
           url for more info
-          <input {...info} />
+          <input
+            value={info.value}
+            onChange={info.onChange}
+            type={info.type}
+            // {...info}
+          />
         </div>
         <button>create</button>
+        <button onClick={resetValues}>reset</button>
       </form>
     </div>
   )
@@ -161,7 +184,7 @@ const App = () => {
 
   const match = useMatch('/anecdotes/:id')
   const anecdoteFilter = match ? anecdoteById(match.params.id) : null
-  console.log('anecdoteFilter', anecdoteFilter)
+  // console.log('anecdoteFilter', anecdoteFilter)
 
   const vote = (id) => {
     const anecdote = anecdoteById(id)
@@ -174,7 +197,7 @@ const App = () => {
     setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)))
   }
 
-  console.log(anecdoteFilter)
+  // console.log(anecdoteFilter)
 
   return (
     <div>
