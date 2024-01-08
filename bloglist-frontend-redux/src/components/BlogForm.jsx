@@ -1,17 +1,21 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { createNotification } from '../reducers/notificationReducer'
 import blogService from '../services/blogs'
 
-const BlogForm = ({ blogs, setBlogs, setNotificationMsg, addBlog }) => {
+const BlogForm = ({ blogs, setBlogs, addBlog }) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
+
+  const dispatch = useDispatch()
 
   const newAddBlog = (event) => {
     event.preventDefault()
     const blogObject = {
       title: newTitle,
       author: newAuthor,
-      url: newUrl,
+      url: newUrl
     }
 
     blogService
@@ -28,7 +32,7 @@ const BlogForm = ({ blogs, setBlogs, setNotificationMsg, addBlog }) => {
             returnedBlog.user = {
               username: user.username,
               name: user.name,
-              id: user.id,
+              id: user.id
             }
           }
         }
@@ -40,22 +44,25 @@ const BlogForm = ({ blogs, setBlogs, setNotificationMsg, addBlog }) => {
 
         setBlogs(blogs.concat(returnedBlog))
 
-        setNotificationMsg({ type: 'ok', msg: `Added ${newTitle}!` })
-        setTimeout(() => {
-          setNotificationMsg({ type: null, msg: null })
-        }, 5000)
+        dispatch(createNotification(`Added ${newTitle}!`, 3, 'ok'))
+
+        // setNotificationMsg({ type: 'ok', msg: `Added ${newTitle}!` })
+        // setTimeout(() => {
+        //   setNotificationMsg({ type: null, msg: null })
+        // }, 5000)
         setNewTitle('')
         setNewAuthor('')
         setNewUrl('')
       })
       .catch((error) => {
-        setNotificationMsg({
-          type: 'error',
-          msg: error.stack,
-        })
-        setTimeout(() => {
-          setNotificationMsg({ type: null, msg: null })
-        }, 5000)
+        dispatch(createNotification(error.stack, 3, 'error'))
+        // setNotificationMsg({
+        //   type: 'error',
+        //   msg: error.stack,
+        // })
+        // setTimeout(() => {
+        //   setNotificationMsg({ type: null, msg: null })
+        // }, 5000)
         console.log(error)
       })
   }
@@ -68,32 +75,32 @@ const BlogForm = ({ blogs, setBlogs, setNotificationMsg, addBlog }) => {
       <form onSubmit={addBlog}>
         title:
         <input
-          id='title'
-          name='title'
-          data-testid='title-input'
+          id="title"
+          name="title"
+          data-testid="title-input"
           value={newTitle}
           onChange={({ target }) => setNewTitle(target.value)}
         />
         <br />
         author:
         <input
-          id='author'
-          name='author'
-          data-testid='author-input'
+          id="author"
+          name="author"
+          data-testid="author-input"
           value={newAuthor}
           onChange={({ target }) => setNewAuthor(target.value)}
         />
         <br />
         url:
         <input
-          id='url'
-          name='url'
-          data-testid='url-input'
+          id="url"
+          name="url"
+          data-testid="url-input"
           value={newUrl}
           onChange={({ target }) => setNewUrl(target.value)}
         />
         <br />
-        <button id='create' type='submit'>
+        <button id="create" type="submit">
           create
         </button>
       </form>

@@ -20,4 +20,16 @@ Answers to [openfullstack.com](https://fullstackopen.com) course exercises from 
 
 ## f. Exercises: extending the bloglist
 
-- [Exercises 7.9.-7.21.](https://fullstackopen.com/en/part7/exercises_extending_the_bloglist#exercises-7-9-7-21) _Solution details: [7.9]() | [7.10]() | [7.11]() | [7.12]() | [7.13]() | [7.14]() | [7.15]() | [7.16]() | [7.17]() | [7.18]() | [7.19]() | [7.20]() | [7.21]()_
+- [Exercises 7.9.](https://fullstackopen.com/en/part7/exercises_extending_the_bloglist#exercises-7-9-7-21) \_Solution details: [7.9]()
+
+**Redux**
+
+- [Exercises 7.10.-7.13.](https://fullstackopen.com/en/part7/exercises_extending_the_bloglist#exercises-7-9-7-21) _Solution details: [7.10]() | [7.11]() | [7.12]() | [7.13]()_
+
+**React Query & Context**
+
+- [Exercises 7.10.-7.13.](https://fullstackopen.com/en/part7/exercises_extending_the_bloglist#exercises-7-9-7-21) _Solution details: [7.10]() | [7.11]() | [7.12]() | [7.13]()_
+
+**Views, Comments, Navs, Styles (Redux)**
+
+- [Exercises 7.14.-7.21.](https://fullstackopen.com/en/part7/exercises_extending_the_bloglist#exercises-7-9-7-21) _Solution details: [7.14]() | [7.15]() | [7.16]() | [7.17]() | [7.18]() | [7.19]() | [7.20]() | [7.21]()_

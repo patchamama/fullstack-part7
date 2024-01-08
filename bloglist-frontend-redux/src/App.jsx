@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
@@ -7,16 +9,20 @@ import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 
+import { createNotification } from './reducers/notificationReducer'
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [notificationMsg, setNotificationMsg] = useState({
-    type: null,
-    msg: null,
-  })
+  // const [notification, setNotificationMsg] = useState({
+  //   type: null,
+  //   msg: null
+  // })
   const [formBlogVisible, setformBlogVisible] = useState(false)
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -31,16 +37,30 @@ const App = () => {
     }
   }, [])
 
+  const notification = useSelector(({ notification }) => {
+    // alert(notification.message)
+
+    return notification
+  })
+
+  const notify = (message, type) => {
+    const time = 3
+    dispatch(createNotification(message, time, type))
+  }
+
   const logout = () => {
-    setNotificationMsg({
-      type: 'ok',
-      msg: `${user.name} is logged out!`,
-    })
+    const time = 3
+    // setNotificationMsg({
+    //   type: 'ok',
+    //   msg: `${user.name} is logged out!`
+    // })
+
+    notify(`${user.name} is logged out!`, 'ok')
     setTimeout(() => {
-      setNotificationMsg({ type: null, msg: null })
+      // setNotificationMsg({ type: null, msg: null })
       window.localStorage.removeItem('loggedBlogappUser')
       setUser(null)
-    }, 1000)
+    }, time * 1000)
   }
 
   const handleLogin = async (event) => {
@@ -49,7 +69,7 @@ const App = () => {
     try {
       const user = await loginService.login({
         username,
-        password,
+        password
       })
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       // console.log(window.localStorage)
@@ -57,22 +77,24 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-      setNotificationMsg({
-        type: 'ok',
-        msg: `Logged-in with user ${user.name}!`,
-      })
-      setTimeout(() => {
-        setNotificationMsg({ type: null, msg: null })
-      }, 5000)
+      notify(`Logged-in with user ${user.name}!`, 'ok')
+      // setNotificationMsg({
+      //   type: 'ok',
+      //   msg: `Logged-in with user ${user.name}!`
+      // })
+      // setTimeout(() => {
+      //   setNotificationMsg({ type: null, msg: null })
+      // }, 5000)
     } catch (exception) {
       console.log(exception)
-      setNotificationMsg({
-        type: 'error',
-        msg: 'Wrong credentials',
-      })
-      setTimeout(() => {
-        setNotificationMsg({ type: null, msg: null })
-      }, 5000)
+      notify('Wrong credentials', 'error')
+      // setNotificationMsg({
+      //   type: 'error',
+      //   msg: 'Wrong credentials'
+      // })
+      // setTimeout(() => {
+      //   setNotificationMsg({ type: null, msg: null })
+      // }, 5000)
     }
   }
 
@@ -80,7 +102,8 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
-        <Notification message={notificationMsg} />
+        {/* <Notification message={notification} /> */}
+        <Notification message={notification} />
         <LoginForm
           handleSubmit={handleLogin}
           handleUsernameChange={({ target }) => setUsername(target.value)}
@@ -97,16 +120,16 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={notificationMsg} />
+      <Notification message={notification} />
       <p>
         {user.name} logged-in <button onClick={logout}>logout</button>
       </p>
 
-      <Togglable buttonLabel='new blog'>
+      <Togglable buttonLabel="new blog">
         <BlogForm
           blogs={blogs}
           setBlogs={setBlogs}
-          setNotificationMsg={setNotificationMsg}
+          // setNotificationMsg={setNotificationMsg}
         />
       </Togglable>
       {sortedBlogs.map((blog) => (
@@ -115,7 +138,7 @@ const App = () => {
           blog={blog}
           blogs={blogs}
           setBlogs={setBlogs}
-          setNotificationMsg={setNotificationMsg}
+          // setNotificationMsg={setNotificationMsg}
         />
       ))}
     </div>

@@ -1,16 +1,20 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { createNotification } from '../reducers/notificationReducer'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, blogs, setBlogs, setNotificationMsg, handleLike }) => {
+const Blog = ({ blog, blogs, setBlogs, handleLike }) => {
   const [visible, setVisible] = useState(false)
   const [newLikes, setNewLikes] = useState(0)
+
+  const dispatch = useDispatch()
 
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
-    marginBottom: 5,
+    marginBottom: 5
   }
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
@@ -19,7 +23,7 @@ const Blog = ({ blog, blogs, setBlogs, setNotificationMsg, handleLike }) => {
   const newHandleLike = async () => {
     const newBlog = {
       ...blog,
-      likes: blog.likes + 1,
+      likes: blog.likes + 1
     }
     // console.log(newBlog)
     try {
@@ -37,18 +41,20 @@ const Blog = ({ blog, blogs, setBlogs, setNotificationMsg, handleLike }) => {
           blogItem.id !== updatedBlog.id ? blogItem : updatedBlog
         )
       )
-      setNotificationMsg({ type: 'ok', msg: `Updated "${blog.title}"!` })
-      setTimeout(() => {
-        setNotificationMsg({ type: null, msg: null })
-      }, 5000)
+      dispatch(createNotification(`Updated "${blog.title}"!`, 3, 'ok'))
+      // setNotificationMsg({ type: 'ok', msg: `Updated "${blog.title}"!` })
+      // setTimeout(() => {
+      //   setNotificationMsg({ type: null, msg: null })
+      // }, 5000)
     } catch (error) {
-      setNotificationMsg({
-        type: 'error',
-        msg: error.stack,
-      })
-      setTimeout(() => {
-        setNotificationMsg({ type: null, msg: null })
-      }, 5000)
+      dispatch(createNotification(error.stack, 3, 'error'))
+      // setNotificationMsg({
+      //   type: 'error',
+      //   msg: error.stack
+      // })
+      // setTimeout(() => {
+      //   setNotificationMsg({ type: null, msg: null })
+      // }, 5000)
       console.log(error)
     }
   }
@@ -62,40 +68,42 @@ const Blog = ({ blog, blogs, setBlogs, setNotificationMsg, handleLike }) => {
     try {
       await blogService.remove(blog.id)
       setBlogs(blogs.filter((blogItem) => blogItem.id !== blog.id))
-      setNotificationMsg({ type: 'ok', msg: `Removed "${blog.title}"!` })
-      setTimeout(() => {
-        setNotificationMsg({ type: null, msg: null })
-      }, 5000)
+      dispatch(createNotification(`Removed "${blog.title}"!`, 3, 'ok'))
+      // setNotificationMsg({ type: 'ok', msg: `Removed "${blog.title}"!` })
+      // setTimeout(() => {
+      //   setNotificationMsg({ type: null, msg: null })
+      // }, 5000)
     } catch (error) {
-      setNotificationMsg({
-        type: 'error',
-        msg: error.stack,
-      })
-      setTimeout(() => {
-        setNotificationMsg({ type: null, msg: null })
-      }, 5000)
+      dispatch(createNotification(error.stack, 3, 'error'))
+      // setNotificationMsg({
+      //   type: 'error',
+      //   msg: error.stack
+      // })
+      // setTimeout(() => {
+      //   setNotificationMsg({ type: null, msg: null })
+      // }, 5000)
       console.log(error)
     }
   }
 
   return (
-    <div className='blog' style={blogStyle}>
-      <span className='title'>{blog.title}</span>{' '}
-      <span className='author'>{blog.author}</span>{' '}
+    <div className="blog" style={blogStyle}>
+      <span className="title">{blog.title}</span>{' '}
+      <span className="author">{blog.author}</span>{' '}
       <span style={hideWhenVisible}>
-        <button className='view' onClick={() => setVisible(true)}>
+        <button className="view" onClick={() => setVisible(true)}>
           view
         </button>
       </span>
-      <span className='details' style={showWhenVisible}>
+      <span className="details" style={showWhenVisible}>
         <button onClick={() => setVisible(false)}>hide</button>
         <br />
-        <a href='{blog.url}' target='_blank'>
-          <span className='url'>{blog.url}</span>
+        <a href="{blog.url}" target="_blank">
+          <span className="url">{blog.url}</span>
         </a>
         <br />
-        <span className='likes'>likes {blog.likes}</span>{' '}
-        <button className='like' onClick={handleLike}>
+        <span className="likes">likes {blog.likes}</span>{' '}
+        <button className="like" onClick={handleLike}>
           like
         </button>
         <br />
